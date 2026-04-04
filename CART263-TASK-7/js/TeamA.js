@@ -19,13 +19,22 @@ export class PlanetA {
         this.planetMesh.receiveShadow = true;
         this.group.add(this.planetMesh);
 
-        //STEP 1:
-        //TODO: Create a planet using THREE.SphereGeometry (Radius must be between 1.5 and 2).
-        //TODO: Give it a custom material using THREE.MeshStandardMaterial.
-        //TODO: Use castShadow and receiveShadow on the mesh and all future ones so they can cast and receive shadows.
-        //TODO: Add the planet mesh to the planet group.
-
         //STEP 2: 
+        const moonGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const moonGeometry2 = new THREE.SphereGeometry(0.3, 16, 16);
+        const moonMaterial = new THREE.MeshStandardMaterial({color: 0x888888});
+        const moonMaterial2 = new THREE.MeshStandardMaterial({color: 0x555555});
+        this.moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
+        this.moonMesh.castShadow = true;
+        this.moonMesh.receiveShadow = true;
+        this.moonMesh.position.set(3, 0, 0); // Position the moon at a distance from the planet
+        this.group.add(this.moonMesh);
+
+        this.moonMesh2 = new THREE.Mesh(moonGeometry2, moonMaterial2);
+        this.moonMesh2.castShadow = true;
+        this.moonMesh2.receiveShadow = true;
+        this.moonMesh2.position.set(-3, 0, 0); // Position the second moon at a distance from the planet
+        this.group.add(this.moonMesh2);
         //TODO: Add from 1 to 3 orbiting moons to the planet group. 
         //TODO: The moons should rotate around the planet just like the planet group rotates around the Sun.
 
