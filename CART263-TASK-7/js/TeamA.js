@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Planet class for Team A
 export class PlanetA {
@@ -35,10 +36,40 @@ export class PlanetA {
         this.moonMesh2.receiveShadow = true;
         this.moonMesh2.position.set(-3, 0, 0); // Position the second moon at a distance from the planet
         this.group.add(this.moonMesh2);
-        //TODO: Add from 1 to 3 orbiting moons to the planet group. 
-        //TODO: The moons should rotate around the planet just like the planet group rotates around the Sun.
-
+       
         //STEP 3:
+       const gltfLoader = new GLTFLoader();
+this.wolfModel = null;
+
+gltfLoader.load(
+    'models/Wolf-Blender-2_82a.glb',   // use .glb — self-contained
+    (gltf) => {
+        this.wolfModel = gltf.scene;
+        this.wolfModel.scale.set(10, 10, 10);
+
+        // Place wolf on the surface of the planet (radius = 1.5)
+        this.wolfModel.position.set(0, 1.5, 0);
+
+        // Rotate so wolf stands upright on the planet surface
+        this.wolfModel.rotation.x = 0;
+
+        // Enable shadows
+        this.wolfModel.traverse((node) => {
+            if (node.isMesh) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+            }
+        });
+
+        this.group.add(this.wolfModel);   // ← don't forget this!
+    },
+    (xhr) => {
+        console.log('Wolf: ' + (xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    (error) => {
+        console.error('Error loading wolf model:', error);
+    }
+);
         //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
         //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
         
