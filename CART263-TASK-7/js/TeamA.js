@@ -23,6 +23,7 @@ export class PlanetA {
         this.group.add(this.planetMesh);
 
         //STEP 2: 
+        // moons 
         const moonGeometry = new THREE.SphereGeometry(0.5, 16, 16);
         const moonGeometry2 = new THREE.SphereGeometry(0.3, 16, 16);
         const moonMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
@@ -39,6 +40,7 @@ export class PlanetA {
         this.group.add(this.moonMesh2);
        
         //STEP 3:
+        // Load Blender model to populate the planet
        const gltfLoader = new GLTFLoader();
        this.wolfModel = null;
        gltfLoader.load('assets/Wolf.glb', (gltf) => {
@@ -81,6 +83,7 @@ export class PlanetA {
         this.moonMesh2.position.set(Math.cos(this.moonAngle2) * -3, 0.5, Math.sin(this.moonAngle2) * -3);
     }
 
+    // Raycasting to detect clicks on the models
   click(mouse, scene, camera) {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, camera);
