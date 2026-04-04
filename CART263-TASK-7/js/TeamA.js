@@ -42,16 +42,16 @@ export class PlanetA {
 this.wolfModel = null;
 
 gltfLoader.load(
-    'models/Wolf-Blender-2_82a.glb',   // use .glb — self-contained
+    'wolfmodels/Wolf-Blender-2_82a.glb',   // use .glb — self-contained
     (gltf) => {
         this.wolfModel = gltf.scene;
-        this.wolfModel.scale.set(10, 10, 10);
+        this.wolfModel.scale.set(0.3, 0.3, 0.3);
 
         // Place wolf on the surface of the planet (radius = 1.5)
         this.wolfModel.position.set(0, 1.5, 0);
 
         // Rotate so wolf stands upright on the planet surface
-        this.wolfModel.rotation.x = 0;
+        this.wolfModel.rotation.x = -Math.PI / 2;
 
         // Enable shadows
         this.wolfModel.traverse((node) => {
