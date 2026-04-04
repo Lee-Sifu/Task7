@@ -41,19 +41,13 @@ export class PlanetA {
        const gltfLoader = new GLTFLoader();
 this.wolfModel = null;
 
-gltfLoader.load(
-    'wolfmodels/Wolf-Blender-2_82a.glb',   // use .glb — self-contained
+gltfLoader.load('assets/models/Wolf-Blender-2_82a.glb',
     (gltf) => {
         this.wolfModel = gltf.scene;
         this.wolfModel.scale.set(0.3, 0.3, 0.3);
-
-        // Place wolf on the surface of the planet (radius = 1.5)
         this.wolfModel.position.set(0, 1.5, 0);
-
-        // Rotate so wolf stands upright on the planet surface
         this.wolfModel.rotation.x = -Math.PI / 2;
 
-        // Enable shadows
         this.wolfModel.traverse((node) => {
             if (node.isMesh) {
                 node.castShadow = true;
@@ -61,14 +55,10 @@ gltfLoader.load(
             }
         });
 
-        this.group.add(this.wolfModel);   // ← don't forget this!
+        this.group.add(this.wolfModel);
     },
-    (xhr) => {
-        console.log('Wolf: ' + (xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-    (error) => {
-        console.error('Error loading wolf model:', error);
-    }
+    (xhr) => console.log('Wolf: ' + (xhr.loaded / xhr.total * 100) + '% loaded'),
+    (error) => console.error('Error loading wolf model:', error)
 );
         //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
         //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
