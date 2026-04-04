@@ -13,10 +13,12 @@ export class PlanetB {
               
         // Create planet
         //STEP 1:
-        //TODO: Create a planet using THREE.SphereGeometry (Radius must be between 1.5 and 2).
-        //TODO: Give it a custom material using THREE.MeshStandardMaterial.
-        //TODO: Use castShadow and receiveShadow on the mesh and all future ones so they can cast and receive shadows.
-        //TODO: Add the planet mesh to the planet group.
+       const planetGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+               const planetMaterial = new THREE.MeshStandardMaterial({color: 0x4555ff});
+               this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
+               this.planetMesh.castShadow = true;
+               this.planetMesh.receiveShadow = true;
+               this.group.add(this.planetMesh);
 
         //STEP 2: 
         //TODO: Add from 1 to 3 orbiting moons to the planet group. 
