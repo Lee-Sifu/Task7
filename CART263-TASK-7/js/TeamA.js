@@ -12,6 +12,13 @@ export class PlanetA {
         this.group = new THREE.Group()
               
         // Create planet
+        const planetGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+        const planetMaterial = new THREE.MeshStandardMaterial({color: 0x00ff00});
+        this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
+        this.planetMesh.castShadow = true;
+        this.planetMesh.receiveShadow = true;
+        this.group.add(this.planetMesh);
+
         //STEP 1:
         //TODO: Create a planet using THREE.SphereGeometry (Radius must be between 1.5 and 2).
         //TODO: Give it a custom material using THREE.MeshStandardMaterial.
