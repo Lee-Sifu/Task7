@@ -40,8 +40,7 @@ export class PlanetA {
         //STEP 3:
        const gltfLoader = new GLTFLoader();
 this.wolfModel = null;
-
-gltfLoader.load('assets/models/Wolf-Blender-2_82a.glb',
+gltfLoader.load('assets/Wolf.glb',
     (gltf) => {
         this.wolfModel = gltf.scene;
         this.wolfModel.scale.set(0.3, 0.3, 0.3);
