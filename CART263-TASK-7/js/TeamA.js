@@ -83,15 +83,26 @@ export class PlanetA {
         this.moonMesh2.position.set(Math.cos(this.moonAngle2) * -3, 0.5, Math.sin(this.moonAngle2) * -3);
     }
 
-    click(mouse, scene, camera) {
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, camera); // Use mouse + camera, not hardcoded vectors
+  click(mouse, scene, camera) {
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
 
-        const intersects = raycaster.intersectObjects(this.group.children, true);
-        if (intersects.length > 0) {
-            // Example animation: pulse the planet scale on click
-            this.planetMesh.scale.set(1.3, 1.3, 1.3);
+    const intersects = raycaster.intersectObjects(this.group.children, true);
+
+    if (intersects.length > 0) {
+        const hit = intersects[0].object;
+
+        if (hit === this.planetMesh) {
+            // Planet clicked: pulse scale up then back down
+            this.planetMesh.scale.set(1.5, 1.5, 1.5);
             setTimeout(() => this.planetMesh.scale.set(1, 1, 1), 300);
+
+        } else if (hit === this.moonMesh || hit === this.moonMesh2) {
+            // Moon clicked: change color temporarily
+            const originalColor = hit.material.color.getHex();
+            hit.material.color.set(0xff4500); // flash orange
+            setTimeout(() => hit.material.color.set(originalColor), 500);
         }
     }
+ }
 }
