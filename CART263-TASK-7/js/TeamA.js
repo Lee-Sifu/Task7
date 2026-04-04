@@ -56,8 +56,6 @@ export class PlanetA {
 
         this.group.add(this.wolfModel);
     },
-    (xhr) => console.log('Wolf: ' + (xhr.loaded / xhr.total * 100) + '% loaded'),
-    (error) => console.error('Error loading wolf model:', error)
 );    
         //STEP 4:
         //TODO: Use raycasting in the click() method below to detect clicks on the models, and make an animation happen when a model is clicked.
