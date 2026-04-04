@@ -39,14 +39,13 @@ export class PlanetA {
        
         //STEP 3:
        const gltfLoader = new GLTFLoader();
-this.wolfModel = null;
-gltfLoader.load('assets/Wolf.glb',
-    (gltf) => {
+       this.wolfModel = null;
+       gltfLoader.load('assets/Wolf.glb', (gltf) => {
         this.wolfModel = gltf.scene;
         this.wolfModel.scale.set(0.3, 0.3, 0.3);
         this.wolfModel.position.set(0, 1.5, 0);
-        this.wolfModel.rotation.x = -Math.PI / 2;
-
+        this.wolfModel.rotation.x = -Math.PI / 10;
+        
         this.wolfModel.traverse((node) => {
             if (node.isMesh) {
                 node.castShadow = true;
@@ -58,10 +57,7 @@ gltfLoader.load('assets/Wolf.glb',
     },
     (xhr) => console.log('Wolf: ' + (xhr.loaded / xhr.total * 100) + '% loaded'),
     (error) => console.error('Error loading wolf model:', error)
-);
-        //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
-        //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
-        
+);    
         //STEP 4:
         //TODO: Use raycasting in the click() method below to detect clicks on the models, and make an animation happen when a model is clicked.
         //TODO: Use your imagination and creativity!
