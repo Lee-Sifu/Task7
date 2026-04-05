@@ -11,6 +11,7 @@ export class PlanetB {
         this.moonAngle = 0;
         this.moonAngle2 = 0;
         this.moonAngle3 = 0;
+        this.activeAnimations = [];
         //Create planet group
         this.group = new THREE.Group()
               
@@ -32,7 +33,7 @@ export class PlanetB {
         const moonMaterial3 = new THREE.MeshStandardMaterial({ color: 0x333333 });
 
         this.moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
-        this.moonMesh.castShadow = true;
+        this.moonMesh.castShadow = true; 
         this.moonMesh.receiveShadow = true;
         this.group.add(this.moonMesh);
        
@@ -45,7 +46,7 @@ export class PlanetB {
         this.moonMesh3.castShadow = true;
         this.moonMesh3.receiveShadow = true;
         this.group.add(this.moonMesh3);
-
+   
         //STEP 3:
         const gltfLoader = new GLTFLoader();
                this.compsognathusModel = null;
@@ -65,7 +66,7 @@ export class PlanetB {
                 this.group.add(this.compsognathusModel);
             },
         );  
-        
+
         //STEP 4:
         //TODO: Use raycasting in the click() method below to detect clicks on the models, and make an animation happen when a model is clicked.
         //TODO: Use your imagination and creativity!
@@ -91,10 +92,49 @@ export class PlanetB {
 
         this.moonAngle3 += delta * 3.0;
         this.moonMesh3.position.set(Math.cos(this.moonAngle3) * 2, -0.5, Math.sin(this.moonAngle3) * 2);
-    }
 
-    click(mouse, scene, camera) {
-        //TODO: Do the raycasting here.
-    }
+   // Drive click animations
+    this.activeAnimations = this.activeAnimations.filter(anim => {
+        anim.elapsed += delta;
+        const t = Math.min(anim.elapsed / anim.duration, 1); // 0 → 1
+
+        // Bounce curve: scale up then back down
+        const bounce = Math.sin(t * Math.PI); // peaks at t=0.5
+        const scaleFactor = 1 + bounce * 0.8;
+
+        anim.object.scale.set(
+            anim.originalScale.x * scaleFactor,
+            anim.originalScale.y * scaleFactor,
+            anim.originalScale.z * scaleFactor
+        );
+
+        if (t >= 1) {
+            // Reset scale exactly when done
+            anim.object.scale.copy(anim.originalScale);
+            return false; // remove from list
+        }
+        return true; // keep running
+    });
 }
 
+    click(mouse, scene, camera) {
+       const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, scene, camera);
+    const intersects = raycaster.intersectObjects(this.group.children, true);
+
+        if (intersects.length > 0) {
+        const clickedObject = intersects[0].object;
+        const originalScale = clickedObject.scale.clone();
+
+        console.log('Clicked on:', clickedObject.name || clickedObject.parent.name);
+
+        // Push animation state into the list
+        this.activeAnimations.push({
+            object: clickedObject,
+            originalScale: originalScale,
+            elapsed: 0,
+            duration: 500
+        });
+    }
+ }
+}
