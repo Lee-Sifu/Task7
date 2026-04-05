@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Planet class for Team B
 export class PlanetB {
@@ -46,6 +47,24 @@ export class PlanetB {
         this.group.add(this.moonMesh3);
 
         //STEP 3:
+        const gltfLoader = new GLTFLoader();
+               this.compsognathusModel = null;
+               gltfLoader.load('assets/compsognathus/compsognathus.gltf', (gltf) => {
+                this.compsognathusModel = gltf.scene;
+                this.compsognathusModel.scale.set(0.5, 0.5, 0.5);
+                this.compsognathusModel.position.set(0, 1.5, 0);
+                this.compsognathusModel.rotation.x = -Math.PI / 10;
+                
+                this.compsognathusModel.traverse((node) => {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = true;
+                    }
+                });
+        
+                this.group.add(this.compsognathusModel);
+            },
+        );  
         //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
         //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
         
