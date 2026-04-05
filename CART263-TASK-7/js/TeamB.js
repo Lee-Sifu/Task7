@@ -65,8 +65,6 @@ export class PlanetB {
                 this.group.add(this.compsognathusModel);
             },
         );  
-        //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
-        //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
         
         //STEP 4:
         //TODO: Use raycasting in the click() method below to detect clicks on the models, and make an animation happen when a model is clicked.
