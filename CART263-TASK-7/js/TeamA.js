@@ -43,7 +43,7 @@ export class PlanetA {
         // Load Blender model to populate the planet
        const gltfLoader = new GLTFLoader();
        this.wolfModel = null;
-       gltfLoader.load('assets/Wolf.glb', (gltf) => {
+       gltfLoader.load('assets/wolf/gltf/Wolf-Blender-2.82a.gltf', (gltf) => {
         this.wolfModel = gltf.scene;
         this.wolfModel.scale.set(0.3, 0.3, 0.3);
         this.wolfModel.position.set(0, 1.5, 0);
