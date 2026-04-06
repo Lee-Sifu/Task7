@@ -52,7 +52,7 @@ export class PlanetB {
                this.compsognathusModel = null;
                gltfLoader.load('assets/compsognathus/compsognathus.gltf', (gltf) => {
                 this.compsognathusModel = gltf.scene;
-                this.compsognathusModel.scale.set(0.5, 0.5, 0.5);
+                this.compsognathusModel.scale.set(0.6, 0.6, 0.6);
                 this.compsognathusModel.position.set(0, 1.5, 0);
                 this.compsognathusModel.rotation.x = -Math.PI / 10;
                 
@@ -108,33 +108,64 @@ export class PlanetB {
             anim.originalScale.z * scaleFactor
         );
 
-        if (t >= 1) {
-            // Reset scale exactly when done
-            anim.object.scale.copy(anim.originalScale);
-            return false; // remove from list
-        }
-        return true; // keep running
-    });
-}
+         // Spin (only for dino, which has originalRotation stored)
+            if (anim.originalRotation) {
+                anim.object.rotation.y = anim.originalRotation.y + t * Math.PI * 2;
+            }
 
-    click(mouse, scene, camera) {
-       const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(mouse, scene, camera);
-    const intersects = raycaster.intersectObjects(this.group.children, true);
-
-        if (intersects.length > 0) {
-        const clickedObject = intersects[0].object;
-        const originalScale = clickedObject.scale.clone();
-
-        console.log('Clicked on:', clickedObject.name || clickedObject.parent.name);
-
-        // Push animation state into the list
-        this.activeAnimations.push({
-            object: clickedObject,
-            originalScale: originalScale,
-            elapsed: 0,
-            duration: 500
+         if (t >= 1) {
+                // Reset scale and rotation exactly when done
+                anim.object.scale.copy(anim.originalScale);
+                if (anim.originalRotation) {
+                    anim.object.rotation.y = anim.originalRotation.y;
+                }
+                return false; // remove from list
+            }
+            return true; // keep running
         });
     }
+
+    click(mouse, scene, camera) {
+     const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(this.group.children, true);
+
+    if (intersects.length > 0) {
+        const clickedObject = intersects[0].object;
+
+        // Walk up the hierarchy to check if we clicked the compsognathus
+        let obj = clickedObject;
+        while (obj && obj !== this.group) {
+            if (obj === this.compsognathusModel) {
+                this.triggerDinoAnimation();
+                return;
+            }
+            obj = obj.parent;
+        }
+
+        // Fallback: bounce whatever was clicked (planet, moons)
+        this.activeAnimations.push({
+            object: clickedObject,
+            originalScale: clickedObject.scale.clone(),
+            elapsed: 0,
+            duration: 0.5
+        });
+    }
+}
+
+triggerDinoAnimation() {
+    if (!this.compsognathusModel) return;
+
+    // Avoid stacking duplicate animations on the dino
+    this.activeAnimations = this.activeAnimations.filter(
+        a => a.object !== this.compsognathusModel
+    );
+
+    this.activeAnimations.push({
+        object: this.compsognathusModel,
+        originalScale: this.compsognathusModel.scale.clone(),
+        elapsed: 0,
+        duration: 0.5
+    });
  }
 }
