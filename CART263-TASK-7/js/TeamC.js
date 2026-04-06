@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Planet class for Team C
 export class PlanetC {
@@ -15,7 +16,7 @@ export class PlanetC {
         // Create planet
         //STEP 1:
          const planetGeometry = new THREE.SphereGeometry(2, 32, 32);
-         const planetMaterial = new THREE.MeshStandardMaterial({color: 0xb87ff});
+         const planetMaterial = new THREE.MeshStandardMaterial({color: 0x0b87ff});
          this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
          this.planetMesh.castShadow = true;
          this.planetMesh.receiveShadow = true;
@@ -39,9 +40,30 @@ export class PlanetC {
         this.group.add(this.moonMesh2);
 
         //STEP 3:
-        //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
-        //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
-        
+        // Load Blender model to populate the planet
+        const gltfLoader = new GLTFLoader();
+this.kiwibirdModel = null;
+
+gltfLoader.load(
+    'assets/kiwibird/kiwibird.gltf',
+    (gltf) => {
+        this.kiwibirdModel = gltf.scene;
+        this.kiwibirdModel.scale.set(2, 2, 2);
+        this.kiwibirdModel.position.set(0, 1.5, 0);
+        this.kiwibirdModel.rotation.x = -Math.PI / 10;
+        this.kiwibirdModel.traverse((node) => {
+            if (node.isMesh) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+            }
+        }); // <-- traverse closes here
+        this.group.add(this.kiwibirdModel);
+    },
+    undefined, // progress callback (unused)
+    (error) => {
+        console.error('Failed to load kiwibird model:', error);
+    }
+);
         //STEP 4:
         //TODO: Use raycasting in the click() method below to detect clicks on the models, and make an animation happen when a model is clicked.
         //TODO: Use your imagination and creativity!
