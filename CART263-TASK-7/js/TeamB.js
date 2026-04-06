@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Planet class for Team B
 export class PlanetB {
@@ -8,64 +7,24 @@ export class PlanetB {
         this.orbitRadius = orbitRadius;
         this.orbitSpeed = orbitSpeed;
         this.angle = Math.random() * Math.PI * 2;
-        this.moonAngle = 0;
-        this.moonAngle2 = 0;
-        this.moonAngle3 = 0;
-        this.activeAnimations = [];
+
         //Create planet group
         this.group = new THREE.Group()
-              
+
         // Create planet
         //STEP 1:
-       const planetGeometry = new THREE.SphereGeometry(1.5, 32, 32);
-       const planetMaterial = new THREE.MeshStandardMaterial({color: 0x4555ff});
-       this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
-       this.planetMesh.castShadow = true;
-       this.planetMesh.receiveShadow = true;
-       this.group.add(this.planetMesh);
+        //TODO: Create a planet using THREE.SphereGeometry (Radius must be between 1.5 and 2).
+        //TODO: Give it a custom material using THREE.MeshStandardMaterial.
+        //TODO: Use castShadow and receiveShadow on the mesh and all future ones so they can cast and receive shadows.
+        //TODO: Add the planet mesh to the planet group.
 
         //STEP 2: 
-        const moonGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-        const moonGeometry2 = new THREE.SphereGeometry(0.3, 16, 16);
-        const moonGeometry3 = new THREE.SphereGeometry(0.2, 16, 16);
-        const moonMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
-        const moonMaterial2 = new THREE.MeshStandardMaterial({ color: 0x555555 });
-        const moonMaterial3 = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        //TODO: Add from 1 to 3 orbiting moons to the planet group. 
+        //TODO: The moons should rotate around the planet just like the planet group rotates around the Sun.
 
-        this.moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
-        this.moonMesh.castShadow = true; 
-        this.moonMesh.receiveShadow = true;
-        this.group.add(this.moonMesh);
-       
-        this.moonMesh2 = new THREE.Mesh(moonGeometry2, moonMaterial2);
-        this.moonMesh2.castShadow = true;
-        this.moonMesh2.receiveShadow = true;
-        this.group.add(this.moonMesh2);
-
-        this.moonMesh3 = new THREE.Mesh(moonGeometry3, moonMaterial3);
-        this.moonMesh3.castShadow = true;
-        this.moonMesh3.receiveShadow = true;
-        this.group.add(this.moonMesh3);
-   
         //STEP 3:
-        const gltfLoader = new GLTFLoader();
-               this.compsognathusModel = null;
-               gltfLoader.load('assets/compsognathus/compsognathus.gltf', (gltf) => {
-                this.compsognathusModel = gltf.scene;
-                this.compsognathusModel.scale.set(0.6, 0.6, 0.6);
-                this.compsognathusModel.position.set(0, 1.5, 0);
-                this.compsognathusModel.rotation.x = -Math.PI / 10;
-                
-                this.compsognathusModel.traverse((node) => {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = true;
-                    }
-                });
-        
-                this.group.add(this.compsognathusModel);
-            },
-        );  
+        //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
+        //TODO: Make sure to rotate the models so they are oriented correctly relative to the surface of the planet.
 
         //STEP 4:
         //TODO: Use raycasting in the click() method below to detect clicks on the models, and make an animation happen when a model is clicked.
@@ -73,99 +32,20 @@ export class PlanetB {
 
         this.scene.add(this.group);
     }
-    
+
     update(delta) {
         // Orbit around sun
         this.angle += this.orbitSpeed * delta * 30;
         this.group.position.x = Math.cos(this.angle) * this.orbitRadius;
         this.group.position.z = Math.sin(this.angle) * this.orbitRadius;
-        
+
         // Rotate planet
-        this.group.rotation.y += delta*0.5;
+        this.group.rotation.y += delta * 0.5;
 
-        // Orbit moons around planet
-        this.moonAngle += delta * 1.5;
-        this.moonMesh.position.set(Math.cos(this.moonAngle) * 3, 0, Math.sin(this.moonAngle) * 3);
-
-        this.moonAngle2 += delta * 2.2;
-        this.moonMesh2.position.set(Math.cos(this.moonAngle2) * -3, 0.5, Math.sin(this.moonAngle2) * -3);
-
-        this.moonAngle3 += delta * 3.0;
-        this.moonMesh3.position.set(Math.cos(this.moonAngle3) * 2, -0.5, Math.sin(this.moonAngle3) * 2);
-
-   // Drive click animations
-    this.activeAnimations = this.activeAnimations.filter(anim => {
-        anim.elapsed += delta;
-        const t = Math.min(anim.elapsed / anim.duration, 1); // 0 → 1
-
-        // Bounce curve: scale up then back down
-        const bounce = Math.sin(t * Math.PI); // peaks at t=0.5
-        const scaleFactor = 1 + bounce * 0.8;
-
-        anim.object.scale.set(
-            anim.originalScale.x * scaleFactor,
-            anim.originalScale.y * scaleFactor,
-            anim.originalScale.z * scaleFactor
-        );
-
-         // Spin (only for dino, which has originalRotation stored)
-            if (anim.originalRotation) {
-                anim.object.rotation.y = anim.originalRotation.y + t * Math.PI * 2;
-            }
-
-         if (t >= 1) {
-                // Reset scale and rotation exactly when done
-                anim.object.scale.copy(anim.originalScale);
-                if (anim.originalRotation) {
-                    anim.object.rotation.y = anim.originalRotation.y;
-                }
-                return false; // remove from list
-            }
-            return true; // keep running
-        });
+        //TODO: Do the moon orbits and the model animations here.
     }
 
     click(mouse, scene, camera) {
-     const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(this.group.children, true);
-
-    if (intersects.length > 0) {
-        const clickedObject = intersects[0].object;
-
-        // Walk up the hierarchy to check if we clicked the compsognathus
-        let obj = clickedObject;
-        while (obj && obj !== this.group) {
-            if (obj === this.compsognathusModel) {
-                this.triggerDinoAnimation();
-                return;
-            }
-            obj = obj.parent;
-        }
-
-        // Fallback: bounce whatever was clicked (planet, moons)
-        this.activeAnimations.push({
-            object: clickedObject,
-            originalScale: clickedObject.scale.clone(),
-            elapsed: 0,
-            duration: 0.5
-        });
+        //TODO: Do the raycasting here.
     }
-}
-
-triggerDinoAnimation() {
-    if (!this.compsognathusModel) return;
-
-    // Avoid stacking duplicate animations on the dino
-    this.activeAnimations = this.activeAnimations.filter(
-        a => a.object !== this.compsognathusModel
-    );
-
-    this.activeAnimations.push({
-        object: this.compsognathusModel,
-        originalScale: this.compsognathusModel.scale.clone(),
-        elapsed: 0,
-        duration: 0.5
-    });
- }
 }
