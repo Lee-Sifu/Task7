@@ -15,7 +15,7 @@ export class PlanetC {
         // Create planet
         //STEP 1:
          const planetGeometry = new THREE.SphereGeometry(2, 32, 32);
-         const planetMaterial = new THREE.MeshStandardMaterial({color: 0xb95ff});
+         const planetMaterial = new THREE.MeshStandardMaterial({color: 0xb87ff});
          this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
          this.planetMesh.castShadow = true;
          this.planetMesh.receiveShadow = true;
@@ -25,8 +25,8 @@ export class PlanetC {
         // moons 
         const moonGeometry = new THREE.SphereGeometry(0.5, 16, 16);
         const moonGeometry2 = new THREE.SphereGeometry(0.3, 16, 16);
-        const moonMaterial = new THREE.MeshStandardMaterial({ color: 0x999999 });
-        const moonMaterial2 = new THREE.MeshStandardMaterial({ color: 0x555555 });
+        const moonMaterial = new THREE.MeshStandardMaterial({ color: 0x777777 });
+        const moonMaterial2 = new THREE.MeshStandardMaterial({ color: 0x444444 });
        
         this.moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
         this.moonMesh.castShadow = true;
@@ -35,7 +35,7 @@ export class PlanetC {
        
         this.moonMesh2 = new THREE.Mesh(moonGeometry2, moonMaterial2);
         this.moonMesh2.castShadow = true;
-        this.moonMesh2.receiveShadow = true;
+        this.moonMesh2.receiveShadow = true; 
         this.group.add(this.moonMesh2);
 
         //STEP 3:
