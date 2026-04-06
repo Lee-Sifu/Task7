@@ -10,6 +10,7 @@ export class PlanetC {
         this.angle = Math.random() * Math.PI * 2;
         this.moonAngle = 0;
         this.moonAngle2 = 0;
+         this.activeAnimations = [];
         //Create planet group
         this.group = new THREE.Group()
               
@@ -86,10 +87,81 @@ gltfLoader.load(
 
         this.moonAngle2 += delta * 2.2;
         this.moonMesh2.position.set(Math.cos(this.moonAngle2) * -3, 0.5, Math.sin(this.moonAngle2) * -3);
-    }
 
-    click(mouse, scene, camera) {
-        //TODO: Do the raycasting here.
+    // Drive click animations
+       this.activeAnimations = this.activeAnimations.filter(anim => {
+           anim.elapsed += delta;
+           const t = Math.min(anim.elapsed / anim.duration, 1); // 0 → 1
+   
+           // Bounce curve: scale up then back down
+           const bounce = Math.sin(t * Math.PI); // peaks at t=0.5
+           const scaleFactor = 1 + bounce * 0.8;
+   
+           anim.object.scale.set(
+               anim.originalScale.x * scaleFactor,
+               anim.originalScale.y * scaleFactor,
+               anim.originalScale.z * scaleFactor
+           );
+   
+            // Spin (only for dino, which has originalRotation stored)
+               if (anim.originalRotation) {
+                   anim.object.rotation.y = anim.originalRotation.y + t * Math.PI * 2;
+               }
+   
+            if (t >= 1) {
+                   // Reset scale and rotation exactly when done
+                   anim.object.scale.copy(anim.originalScale);
+                   if (anim.originalRotation) {
+                       anim.object.rotation.y = anim.originalRotation.y;
+                   }
+                   return false; // remove from list
+               }
+               return true; // keep running
+           });
+       }
+   
+       click(mouse, scene, camera) {
+        const raycaster = new THREE.Raycaster();
+       raycaster.setFromCamera(mouse, camera);
+       const intersects = raycaster.intersectObjects(this.group.children, true);
+   
+       if (intersects.length > 0) {
+           const clickedObject = intersects[0].object;
+   
+           // Walk up the hierarchy to check if we clicked the compsognathus
+           let obj = clickedObject;
+           while (obj && obj !== this.group) {
+               if (obj === this.kiwibirdModel) {
+                   this.triggerBirdAnimation();
+                   return;
+               }
+               obj = obj.parent;
+           }
+   
+           // Fallback: bounce whatever was clicked (planet, moons)
+           this.activeAnimations.push({
+               object: clickedObject,
+               originalScale: clickedObject.scale.clone(),
+               elapsed: 0,
+               duration: 0.5
+           });
+       }
+   }
+   
+   triggerBirdAnimation() {
+       if (!this.kiwibirdModel) return;
+   
+       // Avoid stacking duplicate animations on the dino
+       this.activeAnimations = this.activeAnimations.filter(
+           a => a.object !== this.kiwibirdModel
+       );
+   
+       this.activeAnimations.push({
+           object: this.kiwibirdModel,
+           originalScale: this.kiwibirdModel.scale.clone(),
+           originalRotation: this.kiwibirdModel.rotation.clone(),
+           elapsed: 0,
+           duration: 0.5
+       });
     }
-}
-
+   }
