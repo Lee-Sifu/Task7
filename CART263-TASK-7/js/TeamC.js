@@ -128,7 +128,7 @@ gltfLoader.load(
        if (intersects.length > 0) {
            const clickedObject = intersects[0].object;
    
-           // Walk up the hierarchy to check if we clicked the compsognathus
+           // Walk up the hierarchy to check if we clicked the bird
            let obj = clickedObject;
            while (obj && obj !== this.group) {
                if (obj === this.kiwibirdModel) {
