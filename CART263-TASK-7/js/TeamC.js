@@ -7,20 +7,36 @@ export class PlanetC {
         this.orbitRadius = orbitRadius;
         this.orbitSpeed = orbitSpeed;
         this.angle = Math.random() * Math.PI * 2;
-
+        this.moonAngle = 0;
+        this.moonAngle2 = 0;
         //Create planet group
         this.group = new THREE.Group()
               
         // Create planet
         //STEP 1:
-        //TODO: Create a planet using THREE.SphereGeometry (Radius must be between 1.5 and 2).
-        //TODO: Give it a custom material using THREE.MeshStandardMaterial.
-        //TODO: Use castShadow and receiveShadow on the mesh and all future ones so they can cast and receive shadows.
-        //TODO: Add the planet mesh to the planet group.
-
+         const planetGeometry = new THREE.SphereGeometry(2, 32, 32);
+         const planetMaterial = new THREE.MeshStandardMaterial({color: 0xb95ff});
+         this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
+         this.planetMesh.castShadow = true;
+         this.planetMesh.receiveShadow = true;
+         this.group.add(this.planetMesh);
+        
         //STEP 2: 
-        //TODO: Add from 1 to 3 orbiting moons to the planet group. 
-        //TODO: The moons should rotate around the planet just like the planet group rotates around the Sun.
+        // moons 
+        const moonGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const moonGeometry2 = new THREE.SphereGeometry(0.3, 16, 16);
+        const moonMaterial = new THREE.MeshStandardMaterial({ color: 0x999999 });
+        const moonMaterial2 = new THREE.MeshStandardMaterial({ color: 0x555555 });
+       
+        this.moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
+        this.moonMesh.castShadow = true;
+        this.moonMesh.receiveShadow = true;
+        this.group.add(this.moonMesh);
+       
+        this.moonMesh2 = new THREE.Mesh(moonGeometry2, moonMaterial2);
+        this.moonMesh2.castShadow = true;
+        this.moonMesh2.receiveShadow = true;
+        this.group.add(this.moonMesh2);
 
         //STEP 3:
         //TODO: Load Blender models to populate the planet with multiple props and critters by adding them to the planet group.
@@ -42,7 +58,12 @@ export class PlanetC {
         // Rotate planet
         this.group.rotation.y += delta*0.5;
 
-        //TODO: Do the moon orbits and the model animations here.
+        // Orbit moons around planet
+        this.moonAngle += delta * 1.5;
+        this.moonMesh.position.set(Math.cos(this.moonAngle) * 3, 0, Math.sin(this.moonAngle) * 3);
+
+        this.moonAngle2 += delta * 2.2;
+        this.moonMesh2.position.set(Math.cos(this.moonAngle2) * -3, 0.5, Math.sin(this.moonAngle2) * -3);
     }
 
     click(mouse, scene, camera) {
