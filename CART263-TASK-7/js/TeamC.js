@@ -167,7 +167,7 @@ export class PlanetC {
             // Walk up the hierarchy to check if we clicked the bird
             let obj = clickedObject;
             while (obj && obj !== this.group) {
-                if (obj === this.kiwibirdModel) {
+                if (this.birds.includes(obj)) {
                     this.triggerBirdAnimation();
                     return;
                 }
@@ -184,18 +184,14 @@ export class PlanetC {
         }
     }
 
-    triggerBirdAnimation() {
-        if (!this.kiwibirdModel) return;
+    triggerBirdAnimation(bird) {
+        if (!bird) return;
 
         // Avoid stacking duplicate animations on the dino
-        this.activeAnimations = this.activeAnimations.filter(
-            a => a.object !== this.kiwibirdModel
-        );
-
         this.activeAnimations.push({
-            object: this.kiwibirdModel,
-            originalScale: this.kiwibirdModel.scale.clone(),
-            originalRotation: this.kiwibirdModel.rotation.clone(),
+            object: bird,
+            originalScale: bird.scale.clone(),
+            originalRotation: bird.rotation.clone(),
             elapsed: 0,
             duration: 0.5
         });
