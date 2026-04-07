@@ -49,16 +49,44 @@ export class PlanetC {
             'assets/kiwibird/kiwibird.gltf',
             (gltf) => {
                 this.kiwibirdModel = gltf.scene;
-                this.kiwibirdModel.scale.set(2, 2, 2);
-                this.kiwibirdModel.position.set(0, 1.5, 0);
-                this.kiwibirdModel.rotation.x = -Math.PI / 10;
+
+                //Unify setup for the model
+                this.kiwibirdModel.scale.set(0.6, 0.6, 0.6);
+
                 this.kiwibirdModel.traverse((node) => {
                     if (node.isMesh) {
                         node.castShadow = true;
                         node.receiveShadow = true;
                     }
-                }); // <-- traverse closes here
-                this.group.add(this.kiwibirdModel);
+                });
+
+                // Create multiple populations
+                this.birds = [];
+
+                for (let i = 0; i < 5; i++) {
+
+                    const bird = this.kiwibirdModel.clone();
+
+                    // Random position on the planet surface
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.random() * Math.PI;
+
+                    const radius = 2; // radius
+
+                    const x = radius * Math.sin(phi) * Math.cos(theta);
+                    const y = radius * Math.cos(phi);
+                    const z = radius * Math.sin(phi) * Math.sin(theta);
+
+                    bird.position.set(x, y, z);
+
+                    // Let models map onto the surface
+                    const normal = new THREE.Vector3(x, y, z).normalize();
+                    bird.lookAt(normal.clone().multiplyScalar(2));
+                    bird.rotateX(Math.PI / 2);
+
+                    this.group.add(bird);
+                    this.birds.push(bird);
+                }
             },
             undefined, // progress callback (unused)
             (error) => {
