@@ -68,7 +68,7 @@ export class PlanetC {
                 this.kiwibirdModel = gltf.scene;
 
                 //Unify setup for the model
-                this.kiwibirdModel.scale.set(0.6, 0.6, 0.6);
+                this.kiwibirdModel.scale.set(2, 2, 2);
 
                 this.kiwibirdModel.traverse((node) => {
                     if (node.isMesh) {
@@ -189,7 +189,7 @@ export class PlanetC {
             let obj = clickedObject;
             while (obj && obj !== this.group) {
                 if (this.birds.includes(obj)) {
-                    this.triggerBirdAnimation();
+                    this.triggerBirdAnimation(obj);
                     return;
                 }
                 obj = obj.parent;
