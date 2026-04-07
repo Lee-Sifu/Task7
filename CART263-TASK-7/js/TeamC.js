@@ -68,7 +68,7 @@ export class PlanetC {
                 this.kiwibirdModel = gltf.scene;
 
                 //Unify setup for the model
-                this.kiwibirdModel.scale.set(2, 2, 2);
+                this.kiwibirdModel.scale.set(0.6, 0.6, 0.6);
 
                 this.kiwibirdModel.traverse((node) => {
                     if (node.isMesh) {
@@ -208,7 +208,7 @@ export class PlanetC {
     triggerBirdAnimation(bird) {
         if (!bird) return;
 
-        // Avoid stacking duplicate animations on the dino
+        // Avoid stacking duplicate animations on the birds
         this.activeAnimations.push({
             object: bird,
             originalScale: bird.scale.clone(),
