@@ -17,11 +17,28 @@ export class PlanetC {
         // Create planet
         //STEP 1:
         const planetGeometry = new THREE.SphereGeometry(2, 32, 32);
-        const planetMaterial = new THREE.MeshStandardMaterial({ color: 0x0b87ff });
+        const planetMaterial = new THREE.MeshStandardMaterial({
+            color: 0x0b87ff,
+            emissive: 0x0033ff,
+            emissiveIntensity: 0.6,
+            roughness: 0.4,
+            metalness: 0.1
+        });
         this.planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
         this.planetMesh.castShadow = true;
         this.planetMesh.receiveShadow = true;
         this.group.add(this.planetMesh);
+
+        //Atmosphere glow
+        const glowGeometry = new THREE.SphereGeometry(2.2, 32, 32);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: 0x3399ff,
+            transparent: true,
+            opacity: 0.25,
+            side: THREE.BackSide
+        });
+        this.glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+        this.group.add(this.atmosphere);
 
         //STEP 2: 
         // moons 
@@ -108,6 +125,10 @@ export class PlanetC {
 
         // Rotate planet
         this.group.rotation.y += delta * 0.5;
+
+        //Glowing and breathing effect
+        const glowPulse = 0.5 + Math.sin(Date.now() * 0.002) * 0.2;
+        this.planetMesh.material.emissiveIntensity = glowPulse;
 
         // Orbit moons around planet
         this.moonAngle += delta * 1.5;
